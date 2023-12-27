@@ -447,8 +447,8 @@ class TestDHCPDiscoveryClean(CiTestCase):
             self.logs.getvalue(),
         )
         self.assertIn(
-           "DHCP client not found: dhcpcd",
-           self.logs.getvalue(),
+            "DHCP client not found: dhcpcd",
+            self.logs.getvalue(),
         )
 
     @mock.patch("cloudinit.net.dhcp.find_fallback_nic", return_value=None)
@@ -500,7 +500,7 @@ class TestDHCPDiscoveryClean(CiTestCase):
               option subnet-mask 255.255.255.0;
               option routers 192.168.2.1;
             }
-        """
+            """
         )
 
         with mock.patch(
@@ -585,7 +585,7 @@ class TestDHCPDiscoveryClean(CiTestCase):
               option subnet-mask 255.255.255.0;
               option routers 192.168.2.1;
             }
-        """
+            """
         )
         my_pid = 1
         m_getppid.return_value = 1  # Indicate that dhclient has daemonized
@@ -667,7 +667,7 @@ class TestDHCPDiscoveryClean(CiTestCase):
               option subnet-mask 255.255.255.0;
               option routers 192.168.2.1;
             }
-        """
+            """
         )
         my_pid = 1
         with mock.patch(
@@ -735,12 +735,12 @@ class TestDHCPDiscoveryClean(CiTestCase):
         tmpdir = self.tmp_dir()
         lease_content = dedent(
             """
-                lease {
-                  interface "eth9";
-                  fixed-address 192.168.2.74;
-                  option subnet-mask 255.255.255.0;
-                  option routers 192.168.2.1;
-                }
+            lease {
+              interface "eth9";
+              fixed-address 192.168.2.74;
+              option subnet-mask 255.255.255.0;
+              option routers 192.168.2.1;
+            }
             """
         )
         lease_file = os.path.join(tmpdir, "dhcp.leases")
@@ -748,7 +748,7 @@ class TestDHCPDiscoveryClean(CiTestCase):
         pid_file = os.path.join(tmpdir, "dhclient.pid")
         my_pid = 1
         write_file(pid_file, "%d\n" % my_pid)
-        m_getppid.return_value = 1  # Indicate that dhclient has daemonized
+        m_getppid.return_value = 1
 
         def dhcp_log_func(out, err):
             self.assertEqual(out, dhclient_out)
