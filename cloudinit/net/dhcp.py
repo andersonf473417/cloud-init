@@ -537,12 +537,17 @@ class Dhcpcd:
     client_name = "dhcpcd"
 
     def __init__(self):
+        """Initialize Dhcpcd client.
+
+        Checks for the presence of the dhcpcd command and raises an error
+        if it is not found.
+        """
         self.dhclient_path = subp.which("dhcpcd")
         if not self.dhclient_path:
             LOG.debug(
-                "Skip dhclient configuration: No dhclient command found."
+                "Skip dhcpcd configuration: No dhcpcd command found."
             )
-            raise NoDHCPLeaseMissingDhclientError()
+            raise NoDHCPLeaseMissingUdhcpcError()
 
     def dhcp_discovery(
         self,
@@ -550,22 +555,18 @@ class Dhcpcd:
         dhcp_log_func=None,
         distro=None,
     ):
-        """Run dhclient on the interface without scripts/filesystem artifacts.
+        """Run dhcpcd on the interface without scripts/filesystem artifacts.
 
-        @param dhclient_cmd_path: Full path to the dhclient used.
-        @param interface: Name of the network interface on which to dhclient.
-        @param dhcp_log_func: A callable accepting the dhclient output and
+        @param interface: Name of the network interface on which to run dhcpcd.
+        @param dhcp_log_func: A callable accepting the dhcpcd output and
             error streams.
 
         @return: A list of dicts of representing the dhcp leases parsed from
-            the dhclient.lease file or empty list.
+            the dhcpcd lease file or empty list.
         """
         LOG.debug("Performing a dhcp discovery on %s", interface)
 
-        # ISC dhclient needs the interface up to send initial discovery packets
-        # Generally dhclient relies on dhclient-script PREINIT action to bring
-        # the link up before attempting discovery. Since we are using
-        # -sf /bin/true, we need to do that "link up" ourselves first.
+        # dhcpcd needs the interface up to send initial discovery packets
         distro.net_ops.link_up(interface)
 
         # TODO: disabling hooks means we need to get all of the files in
@@ -586,7 +587,7 @@ class Dhcpcd:
             )
         except subp.ProcessExecutionError as error:
             LOG.debug(
-                "dhclient exited with code: %s stderr: %r stdout: %r",
+                "dhcpcd exited with code: %s stderr: %r stdout: %r",
                 error.exit_code,
                 error.stderr,
                 error.stdout,
@@ -656,7 +657,7 @@ class Dhcpcd:
 
         except subp.ProcessExecutionError as error:
             LOG.debug(
-                "dhclient exited with code: %s stderr: %r stdout: %r",
+                "dhcpcd exited with code: %s stderr: %r stdout: %r",
                 error.exit_code,
                 error.stderr,
                 error.stdout,
@@ -668,6 +669,11 @@ class Udhcpc(DhcpClient):
     client_name = "udhcpc"
 
     def __init__(self):
+        """Initialize Udhcpc client.
+
+        Checks for the presence of the udhcpc command and raises an error
+        if it is not found.
+        """
         self.udhcpc_path = subp.which("udhcpc")
         if not self.udhcpc_path:
             LOG.debug("Skip udhcpc configuration: No udhcpc command found.")
