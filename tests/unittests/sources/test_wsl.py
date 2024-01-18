@@ -285,7 +285,7 @@ class TestWSLDataSource(CiTestCase):
     @mock.patch("cloudinit.util.lsb_release")
     @mock.patch("cloudinit.sources.DataSourceWSL.instance_name")
     @mock.patch("cloudinit.sources.DataSourceWSL.win_user_profile_dir")
-    def test_data_precendence(self, m_prof_dir, m_iname, m_lsb):
+    def test_data_precedence(self, m_prof_dir, m_iname, m_lsb):
         m_lsb.return_value = SAMPLE_LSB
         m_iname.return_value = INSTANCE_NAME
         m_prof_dir.return_value = self.tmp

@@ -129,7 +129,7 @@ def machine_id():
     """
     MACHINE_ID_FILE = "/etc/machine-id"
 
-    if util.wait_for_files([MACHINE_ID_FILE], 2.0):
+    if not util.wait_for_files([MACHINE_ID_FILE], 2.0):
         LOG.debug("%s file not found", MACHINE_ID_FILE)
         return None
 
